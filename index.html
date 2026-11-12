@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Save and Download Document</title>
+</head>
+<body>
+  <h2>Save Your Document</h2>
+  <textarea id="docContent" rows="6" cols="50" placeholder="Enter your document text..."></textarea>
+  <br><br>
+  <button onclick="downloadFile()">Download as .txt</button>
+
+  <script>
+    function downloadFile() {
+      const content = document.getElementById('docContent').value;
+      if (!content.trim()) {
+        alert("Please enter some content!");
+        return;
+      }
+      // Create Blob
+      const blob = new Blob([content], { type: 'text/plain' });
+      // Create temporary link
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = "mydocument.txt";
+      // Trigger download
+      link.click();
+      // Clean up
+      URL.revokeObjectURL(link.href);
+    }
+  </script>
+</body>
+</html>
