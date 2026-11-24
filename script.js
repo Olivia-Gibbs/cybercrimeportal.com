@@ -253,17 +253,18 @@ function validateEvidenceForm() {
             isValid= false;
         } else {
             clearError($(id));
-        } 
-    });
+        }}
+     
 
 //==== Date ====
-const dateOk = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/[0-9]{4}$/;
+  const dateOk = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/[0-9]{4}$/;
   if (!dateOk.test($("evDate").value.trim())) {
     showError($("evDate"), "Use Month/Day/Year.");
     isValid = false;
   } else {
     clearError($("evDate"));
   }
+
 
   //==== 24 hour time ====
    const timeOk = /^([01][0-9]|2[0-3]):[0-5][0-9]$/;
@@ -283,6 +284,67 @@ if ($("artifactID").value.trim()=== "") {
 }
 
 //==== Category ====
-if ($("category").value === "") {
-    showError($("category"), "Please chosse a category.");
+  if ($("category").value === "") {
+    showError($("category"), "Please choose a category.");
+    isValid = false;
+  } else {
+    clearError($("category"));
+  }
+
+//==== Multi Line Boxes ===
+ ["originDetails", "collectionMethod", "chainOfCustody", "evDescription"].forEach(function (id) {
+    const limits = getLimits(id);
+    if (!checkLineRange($(id), limits.min, limits.max)) {
+      isValid = false;
+    }
+  });
+
+
+
+//====Opening the evidencce form ====
+function openEvidenceForm() {
+  $("evidenceFormElement").reset();
+  clearAllErrors();
+  resetCounters();
+  $("evCaseName").value = currentCase.name;
+  $("evCaseId").value = currentCase.id;
+  $("evCaseName").readOnly = true;
+  $("evCaseId").readOnly = true;
+  showScreen("evidenceForm");
 }
+
+$("evidenceFormElement").addEventListener("submit", function (event) {
+  event.preventDefault();
+  if (!validateEvidenceForm()) {
+    return;
+  }
+
+  const evidenceItem = {
+    submitterName: $("submitterName").value.trim(),
+    date: $("evDate").value.trim(),
+    time: $("evTime").value.trim(),
+    artifactName: $("artifactName").value.trim(),
+    artifactId: $("artifactId").value.trim(),
+    category: $("category").value,
+    originDetails: $("originDetails").value,
+    collector: $("collector").value.trim(),
+    collectionMethod: $("collectionMethod").value,
+    chainOfCustody: $("chainOfCustody").value,
+    description: $("evDescription").value
+  };
+  currentCase.evidence.push(evidenceItem);
+
+  $("upgradedCaseParagraph").textContent = buildCaseParagraph(currentCase);
+
+  const list = $("evidenceList");
+  list.innerHTML = "";
+  currentCase.evidence.forEach(function (item, index) {
+    const li = document.createElement("li");
+    li.textContent = "Evidence " + (index + 1) + ": " + item.artifactName +
+                     " (ID " + item.artifactId + ", " + item.category + ") collected by " +
+                     item.collector + " on " + item.date + " at " + item.time;
+    list.appendChild(li);
+  });
+
+  showScreen("evidenceConfirmation");
+})}
