@@ -88,8 +88,40 @@
           <div class="invalid-feedback"></div>
         </div>
 
+<!-- Agent Name-->
+   <div class="mb-3">
+          <label for="agentName" class="form-label">Name of Agent Adding</label>
+          <input type="text" class="form-control" id="agentName">
+          <div class="invalid-feedback"></div>
+        </div>
 
+<!-- Description and Submission -->
+  <div class="mb-3">
+          <label for="caseNotes" class="form-label">Description Notes</label>
+          <textarea class="form-control" id="caseNotes"></textarea>
+          <div class="invalid-feedback"></div>
+          <div class="form-text" id="count-caseNotes"></div>
+        </div>
 
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </section>
+
+<!-- Case Confirmation -->
+     <section id="caseConfirmation" class="d-none">
+      <div class="alert alert-success">Congratulations you submitted your case!</div>
+      <p id="caseParagraph" class="mb-4"></p>
+      <p>
+        If you would like to add evidence to your case, please click on the evidence button.
+        If you want your current case saved click on the download button to save your information.
+        If you need to make a new case click on the new case button.
+      </p>
+      <div class="btn-group mt-3">
+        <button type="button" class="btn btn-secondary" id="evidenceBtn1">Evidence</button>
+        <button type="button" class="btn btn-success" id="downloadBtn1">Download</button>
+        <button type="button" class="btn btn-outline-primary" id="newCaseBtn1">New Case</button>
+      </div>
+    </section>
  </div>
 
 
