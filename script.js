@@ -253,7 +253,7 @@ function validateEvidenceForm() {
             isValid= false;
         } else {
             clearError($(id));
-        }}
+        }})
      
 
 //==== Date ====
@@ -348,3 +348,71 @@ $("evidenceFormElement").addEventListener("submit", function (event) {
 
   showScreen("evidenceConfirmation");
 })}
+
+//==== Buttons ===
+function newCase () {
+    cureentCase = {}; 
+    $("caseFormElement").reset();
+    clearAllErrors ();
+    resetCounters ();
+    $("otherBox").classlist.add("d-none");
+    showScreen("caseForm");
+}
+
+$("evidenceBtn1").addEventListener("click", openEvidneceForm);
+$("addMoreBtn").addEventListener("click", openEvidenceForm);
+$("newCaseBtn1").addEventListener("click", newCase);
+$("newCaseBtn2").addEventListener("click", newCase);
+$("downloadBtn1").addEventListener("click", downloadFile);
+$("downloadBtn2").addEventListener("click", downloadFile);
+
+// ==== The Downloader ===
+function buildCaseText(caseData) {
+  if (!caseData.name) {
+    return "";
+  }
+  let text = buildCaseParagraph(caseData);
+  if (caseData.evidence.length > 0) {
+    text += "\n\nEvidence:";
+    caseData.evidence.forEach(function (item, index) {
+      text += "\n\nEvidence " + (index + 1) + ":";
+      text += "\nSubmitter Name: " + item.submitterName;
+      text += "\nDate: " + item.date;
+      text += "\nTime: " + item.time;
+      text += "\nName of Artifact: " + item.artifactName;
+      text += "\nArtifact ID: " + item.artifactId;
+      text += "\nCategory: " + item.category;
+      text += "\nOrigin Details: " + item.originDetails;
+      text += "\nCollector: " + item.collector;
+      text += "\nCollection Method: " + item.collectionMethod;
+      text += "\nChain of Custody: " + item.chainOfCustody;
+      text += "\nDescription: " + item.description;
+    });
+  }
+  return text;
+}
+
+//==== Getting the content ===
+function downloadFile () {
+    const content = buildCaseText(currnetCase);
+}
+
+//=== Checking for empty content ===
+if (!content.trim()) {
+    alert("Please submit a case first!");
+    return;
+}
+
+//=== Creating the Blob ===
+const blob = new Blob ([content], {type: "text/plain"});
+
+//==== Create temporrary link ===
+const link = document.createElement ("a");
+link.href = URL.createObjectURL (blob);
+link.download = "Case_" + currentCase.id + ".txt";
+
+//==== Trigger download ===
+link.click ();
+
+//===- Cleaning it up ===
+URL.revokeObjectURL(link.href);
